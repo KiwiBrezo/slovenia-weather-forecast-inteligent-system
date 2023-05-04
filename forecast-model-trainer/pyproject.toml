@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "forecast-model-trainer"
+version = "0.1.0"
+description = "Project for training weather forecast model."
+authors = ["Jan Breznar, Janez"]
+readme = "README.md"
+packages = [{include = "forecast_model_trainer"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

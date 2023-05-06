@@ -1,4 +1,5 @@
 import os
+import time
 import urllib.request
 from datetime import date, timedelta
 
@@ -16,14 +17,14 @@ city_coordinates = [
 ]
 
 city_names = [
-    "Maribor"
-    "Ljubljana"
-    "Kranj"
-    "Koper"
-    "Celje"
-    "Novo_Mesto"
-    "Ptuj"
-    "Murska Sobota"
+    "Maribor",
+    "Ljubljana",
+    "Kranj",
+    "Koper",
+    "Celje",
+    "Novo_Mesto",
+    "Ptuj",
+    "Murska Sobota",
 ]
 
 url_atributes = "&hourly=temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,pressure_msl," \
@@ -42,6 +43,9 @@ def get_data_for_city():
     for i in range(len(city_names)):
         url = "https://archive-api.open-meteo.com/v1/archive?latitude=" + str(city_coordinates[i][0]) + "&longitude=" + str(city_coordinates[i][1]) + "&start_date=" + start_date_string + "&end_date=" + end_date_string + url_atributes
         print("     -> Downloading data for url: ", url)
+
+        # Avoid be baning
+        time.sleep(1)
 
         with urllib.request.urlopen(url) as response:
             raw_data_filename = os.path.join(file_location, "../data/raw/" + city_names[i] + "_" + date_today_string + ".json")

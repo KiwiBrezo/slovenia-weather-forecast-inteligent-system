@@ -3,13 +3,33 @@ import time
 import urllib.request
 from datetime import date, timedelta
 
-from data_processor.city_constants import city_names, city_coordinates
-
 file_location = os.path.dirname(__file__)
 
 url_atributes = "&hourly=temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,pressure_msl," \
                 "surface_pressure,precipitation,weathercode,cloudcover,cloudcover_low,cloudcover_mid,cloudcover_high," \
                 "windspeed_10m,winddirection_10m&timezone=Europe%2FBerlin"
+
+city_coordinates = [
+    (46.55, 15.65),  # Maribor
+    (46.05, 14.51),  # Ljubljana
+    (46.24, 14.36),  # Kranj
+    (45.55, 13.73),  # Koper
+    (46.23, 15.26),  # Celje
+    (45.80, 15.17),  # Novo Mesto
+    (46.42, 15.87),  # Ptuj
+    (46.66, 16.17),  # Murska Sobota
+]
+
+city_names = [
+    "Maribor",
+    "Ljubljana",
+    "Kranj",
+    "Koper",
+    "Celje",
+    "Novo_Mesto",
+    "Ptuj",
+    "Murska_Sobota"
+]
 
 
 def get_data_for_city():

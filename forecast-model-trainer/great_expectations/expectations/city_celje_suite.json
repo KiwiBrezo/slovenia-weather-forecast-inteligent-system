@@ -1,0 +1,60 @@
+{
+  "data_asset_type": null,
+  "expectation_suite_name": "city_celje_suite",
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "max_value": 8760,
+        "min_value": 8760
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {},
+            "metric_name": "table.row_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 1
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_table_columns_to_match_set",
+      "kwargs": {
+        "column_set": [
+          "cloudcover_high",
+          "weathercode",
+          "pressure_msl",
+          "cloudcover_mid",
+          "apparent_temperature",
+          "dewpoint_2m",
+          "surface_pressure",
+          "relativehumidity_2m",
+          "cloudcover_low",
+          "precipitation",
+          "cloudcover",
+          "temperature_2m",
+          "windspeed_10m",
+          "winddirection_10m"
+        ],
+        "exact_match": null
+      },
+      "meta": {
+        "profiler_details": {
+          "success_ratio": 1.0
+        }
+      }
+    }
+  ],
+  "ge_cloud_id": null,
+  "meta": {
+    "citations": [
+      {
+        "citation_date": "2023-05-15T20:16:25.406771Z",
+        "comment": "Created by effective Rule-Based Profiler of OnboardingDataAssistant with the configuration included.\n"
+      }
+    ],
+    "great_expectations_version": "0.16.10"
+  }
+}

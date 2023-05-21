@@ -44,7 +44,7 @@ def quality_check():
         ])
 
         report.run(reference_data=reference, current_data=current)
-        report.save_html(os.path.join(file_location, "../reports/data_reports/" + city_names[i] + "_index.html"))
+        report.save_html(os.path.join(file_location, "../reports/data_reports/" + city_names[i] + "/index.html"))
 
         tests = TestSuite(tests=[
             TestNumberOfColumnsWithMissingValues(),
@@ -57,7 +57,7 @@ def quality_check():
         ])
 
         tests.run(reference_data=reference, current_data=current)
-        tests.save_html(os.path.join(file_location, "../reports/data_stability/" + city_names[i] + "_index.html"))
+        tests.save_html(os.path.join(file_location, "../reports/data_stability/" + city_names[i] + "/index.html"))
 
         print("     -> Done checking on data quality for", city_names[i])
 

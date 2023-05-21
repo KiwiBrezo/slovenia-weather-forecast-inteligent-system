@@ -1,0 +1,124 @@
+name: Data pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fetch_city_data:
+    needs: check_api
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+    outputs:
+      sha_new: ${{ steps.sha_new_outputs_SHA_NEW }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up DVC
+        uses: iterative/setup-dvc@v1
+      - name: Download data with DVC
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd forecast-model-trainer
+          dvc pull -v -f -r origin
+      - name: Install dependencies
+        run: |
+          cd forecast-model-trainer
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install --no-root --without dev
+      - name: Run auto fetch data
+        run: |
+          cd forecast-model-trainer
+          poetry run python data_processor/fetch_city_data.py
+      - name: Add data to storage with DVC
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd forecast-model-trainer
+          dvc add ./data/
+          dvc push -r origin
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git rm -r --cached .
+          git add .
+          git commit -m "Updated raw data on `date` with GitHub Actions"
+          git push origin master
+      - name: Save git HEAD sha
+        id: sha_new
+        run: echo "SHA_NEW=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  process_city_data:
+    needs: fetch_city_data
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.9" ]
+    outputs:
+      sha_new: ${{ steps.sha_new_outputs_SHA_NEW }}
+    permissions:
+      contents: write
+    steps:
+      - env:
+          SHA_NEW: ${{ needs.fetch_air_data.outputs.sha_new }}
+        run: echo "$SHA_NEW"
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.fetch_air_data.outputs.sha_new }}
+          fetch-depth: 0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up DVC
+        uses: iterative/setup-dvc@v1
+      - name: Download data with DVC
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd forecast-model-trainer
+          git pull
+          dvc pull -v -f -r origin
+      - name: Install dependencies
+        run: |
+          cd forecast-model-trainer
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install --no-root --without dev
+      - name: Run auto fetch data
+        run: |
+          cd forecast-model-trainer
+          poetry run python data_processor/process_city_data.py
+      - name: Add data to storage with DVC
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd forecast-model-trainer
+          dvc add ./data/
+          dvc push -r origin
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git rm -r --cached .
+          git add .
+          git commit -m "Updated raw data on `date` with GitHub Actions"
+          git push origin master
+      - name: Save git HEAD sha
+        id: sha_new
+        run: echo "SHA_NEW=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"

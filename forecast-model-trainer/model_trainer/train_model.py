@@ -173,6 +173,7 @@ def compare_latest_model_with_production(city, y_atribute):
 
     print("     -> Done checking results")
 
+
 def main():
     for i in range(len(city_names)):
         (x_train, x_test, y_train, y_test) = prepare_data(city_names[i], "temperature_2m")

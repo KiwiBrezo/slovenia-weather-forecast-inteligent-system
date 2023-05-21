@@ -15,7 +15,7 @@ models_temperature = {
     "Murska_Sobota": None
 }
 
-models_participation = {
+models_precipitation = {
     "Maribor": None,
     "Ljubljana": None,
     "Kranj": None,
@@ -42,8 +42,25 @@ def load_model_production(city, attribute):
     return loaded_model
 
 
-def get_participation_for_city(city, data):
-    return 0
+def get_precipitation_for_city(city, data):
+    global models_precipitation
+
+    if models_precipitation[city] is None:
+        print("     -> No model is loaded, need to load model...")
+        models_precipitation[city] = load_model_production(city, "precipitation")
+
+    df = pd.DataFrame(jsonable_encoder(data))
+
+    # x = np.array(df[["temperature", "relativehumidity", "dewpoint", "surface_pressure", "cloudcover", "windspeed",
+    #                 "winddirection", "pm25"]])
+
+    print("-> Predicting precipitation for:", city)
+    predictions = models_precipitation[city].predict(np.array(df))
+
+    # df["temperature_2m"] = predictions.tolist()
+    # json = df.to_dict(orient='records')
+
+    return predictions
 
 
 def get_temperature_for_city(city, data):
@@ -54,12 +71,14 @@ def get_temperature_for_city(city, data):
         models_temperature[city] = load_model_production(city, "temperature_2m")
 
     df = pd.DataFrame(jsonable_encoder(data))
-    x = np.array(df[["temperature", "relativehumidity", "dewpoint", "surface_pressure", "cloudcover", "windspeed",
-                     "winddirection", "pm25"]])
 
-    predictions = models_temperature[city].predict(x)
+    #x = np.array(df[["temperature", "relativehumidity", "dewpoint", "surface_pressure", "cloudcover", "windspeed",
+    #                 "winddirection", "pm25"]])
 
-    df["pm10"] = predictions.tolist()
-    json = df.to_dict(orient='records')
+    print("-> Predicting temperature for:", city)
+    predictions = models_temperature[city].predict(np.array(df))
+
+    #df["temperature_2m"] = predictions.tolist()
+    #json = df.to_dict(orient='records')
 
     return predictions

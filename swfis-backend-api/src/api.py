@@ -1,26 +1,57 @@
-from typing import Union, List
+from typing import List
 
 import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 
-from src.predict_weather import get_participation_for_city, get_temperature_for_city
+from src.predict_weather import get_precipitation_for_city, get_temperature_for_city
 
 app = FastAPI()
 
 
-class WeatherData(BaseModel):
-    datum_do: str
-    temperature: float
-    relativehumidity: float
-    dewpoint: float
+class TemperatureData(BaseModel):
+    relativehumidity_2m: int
+    dewpoint_2m: float
+    apparent_temperature: float
+    pressure_msl: float
     surface_pressure: float
-    cloudcover: float
-    windspeed: float
-    winddirection: float
-    pm25: int
+    precipitation: float
+    weathercode: int
+    cloudcover: int
+    cloudcover_low: int
+    cloudcover_mid: int
+    cloudcover_high: int
+    windspeed_10m: float
+    winddirection_10m: int
 
+
+class PrecipitationData(BaseModel):
+    temperature_2m: float
+    relativehumidity_2m: int
+    dewpoint_2m: float
+    apparent_temperature: float
+    pressure_msl: float
+    surface_pressure: float
+    weathercode: int
+    cloudcover: int
+    cloudcover_low: int
+    cloudcover_mid: int
+    cloudcover_high: int
+    windspeed_10m: float
+    winddirection_10m: int
+
+
+city_names = [
+    "Maribor",
+    "Ljubljana",
+    "Kranj",
+    "Koper",
+    "Celje",
+    "Novo_Mesto",
+    "Ptuj",
+    "Murska_Sobota"
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,7 +65,8 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {
-        "response": "This is the SWFIS API. You can check the weather for: Maribor, Celje, Ljubljana, Kranj, Novo Mesto, ..."
+        "response": "This is the SWFIS API. You can check the weather for: Maribor, Ljubljana, Kranj, Koper, Celje, "
+                    "Novo_Mesto, Ptuj, Murska_Sobota"
     }
 
 
@@ -43,17 +75,24 @@ def ping_check():
     return {"response": "pong"}
 
 
+@app.get("/city-list")
+def get_city_list():
+    return city_names
+
+
 @app.post("/api/predict/temperature/{city}")
-async def predict_temperature(city: str, data: List[WeatherData]):
-    pred = np.asarray(np.array(get_temperature_for_city(city, data)), dtype='int')
+async def predict_temperature(city: str, data: List[TemperatureData]):
+    if city not in city_names:
+        return {"error": "Invalid city"}
+
+    pred = np.asarray(np.array(get_temperature_for_city(city, data)), dtype='float')
     return {"prediction": pred.tolist()}
 
-    return {"prediction": data}
 
+@app.post("/api/predict/precipitation/{city}")
+async def predict_participation(city: str, data: List[PrecipitationData]):
+    if city not in city_names:
+        return {"error": "Invalid city"}
 
-@app.post("/api/predict/participation/{city}")
-async def predict_participation(city: str, data: List[WeatherData]):
-    pred = np.asarray(np.array(get_participation_for_city(city, data)), dtype='int')
+    pred = np.asarray(np.array(get_precipitation_for_city(city, data)), dtype='float')
     return {"prediction": pred.tolist()}
-
-    return {"prediction": data}

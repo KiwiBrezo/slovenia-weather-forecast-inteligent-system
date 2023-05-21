@@ -289,7 +289,7 @@ jobs:
           git rm -r --cached .
           git add .
           git commit -m "Updated raw data on `date` with GitHub Actions"
-          git push origin master
+          git push origin main
       - name: Save git HEAD sha
         id: sha_new
         run: echo "SHA_NEW=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"

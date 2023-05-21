@@ -160,14 +160,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
           poetry install --no-root --without dev
-      - name: Test with great_expectations and evidently
+      - name: Check with evidently
         run: |
           cd forecast-model-trainer
           poetry run python data_quality/check_city_quality.py
       - name: Deploy data drift for Celje to Netlify
         uses: nwtgck/actions-netlify@v1.2
         with:
-          publish-dir: "reports/data_reports/Celje"
+          publish-dir: "forecast-model-trainer/reports/data_reports/Celje"
           production-deploy: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}

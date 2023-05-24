@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 
-from src.predict_weather import get_precipitation_for_city, get_temperature_for_city
+from predict_weather import get_precipitation_for_city, get_temperature_for_city
 
 app = FastAPI()
 

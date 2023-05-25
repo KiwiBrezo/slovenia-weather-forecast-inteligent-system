@@ -29,6 +29,8 @@ city_names = [
     "Murska_Sobota"
 ]
 
+best_params = None
+
 
 def prepare_data(city, y_atribute):
     print("--- Starting preparing data ---")
@@ -60,6 +62,7 @@ def prepare_data(city, y_atribute):
 
 
 def train_model(city, y_atribute, x_train, x_test, y_train, y_test):
+    global best_params
     print("--- Starting training model ---")
 
     x_train = np.array(x_train)
@@ -67,14 +70,18 @@ def train_model(city, y_atribute, x_train, x_test, y_train, y_test):
     y_train = np.array(y_train)
     y_test = np.array(y_test)
 
+    if best_params is None:
+        print("     -> There are no best params, started grid searching for them...")
+        best_params = get_best_params(x_train, y_train)
+
+    print("     -> Loaded best params for model training")
+
     train_pipe = Pipeline([
         ('imputer', SimpleImputer()),
         ('regressor', RandomForestRegressor())
     ])
 
     print("     -> Start training model for", city, "(", y_atribute, ")")
-
-    best_params = get_best_params(x_train, y_train)
 
     with mlflow.start_run(run_name="Train model pipeline") as run:
         train_pipe.set_params(**best_params)

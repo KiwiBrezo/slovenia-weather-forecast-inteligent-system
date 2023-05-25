@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Backend api for the SWFIS application."
 authors = ["Jan Breznar, Janez"]
 readme = "README.md"
-packages = [{include = "swfis_backend_api"}]
+#packages = [{include = "swfis_backend_api"}]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"

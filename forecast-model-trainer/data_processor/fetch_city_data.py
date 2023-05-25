@@ -46,7 +46,7 @@ def get_data_for_city():
         print("     -> Downloading data for url: ", url)
 
         # Avoid be baning
-        time.sleep(1)
+        time.sleep(10)
 
         with urllib.request.urlopen(url) as response:
             raw_data_filename = os.path.join(file_location, "../data/raw/city/" + city_names[i] + "/" + city_names[i] +

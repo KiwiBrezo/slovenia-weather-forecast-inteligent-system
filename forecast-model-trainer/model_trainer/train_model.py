@@ -173,7 +173,7 @@ def compare_latest_model_with_production(city, y_atribute):
         )
 
         client.transition_model_version_stage(
-            name=model,
+            name=model_name,
             version=production_version,
             stage="Archived"
         )

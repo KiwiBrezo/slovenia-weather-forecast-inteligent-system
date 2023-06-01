@@ -72,11 +72,11 @@ jobs:
       contents: write
     steps:
       - env:
-          SHA_NEW: ${{ needs.fetch_air_data.outputs.sha_new }}
+          SHA_NEW: ${{ needs.fetch_city_data.outputs.sha_new }}
         run: echo "$SHA_NEW"
       - uses: actions/checkout@v3
         with:
-          ref: ${{ needs.fetch_air_data.outputs.sha_new }}
+          ref: ${{ needs.fetch_city_data.outputs.sha_new }}
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -134,11 +134,11 @@ jobs:
       contents: write
     steps:
       - env:
-          SHA_NEW: ${{ needs.merge_air_weather_data.outputs.sha_new }}
+          SHA_NEW: ${{ needs.process_city_data.outputs.sha_new }}
         run: echo "$SHA_NEW"
       - uses: actions/checkout@v3
         with:
-          ref: ${{ needs.merge_air_weather_data.outputs.sha_new }}
+          ref: ${{ needs.process_city_data.outputs.sha_new }}
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -244,11 +244,11 @@ jobs:
       contents: write
     steps:
       - env:
-          SHA_NEW: ${{ needs.validate_air_weather_data.outputs.sha_new }}
+          SHA_NEW: ${{ needs.validate_and_test_city_weather_data.outputs.sha_new }}
         run: echo "$SHA_NEW"
       - uses: actions/checkout@v3
         with:
-          ref: ${{ needs.validate_air_weather_data.outputs.sha_new }}
+          ref: ${{ needs.validate_and_test_city_weather_data.outputs.sha_new }}
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4

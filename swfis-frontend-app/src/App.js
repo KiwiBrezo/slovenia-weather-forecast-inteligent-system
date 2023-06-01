@@ -1,20 +1,15 @@
 
 import './App.css';
 import React from 'react';
-import RootRequest from './components/RootRequest';
-import CityListRequest from './components/CityListRequest';
-import TemperaturePredictionRequest from './components/TemperaturePredictionRequest';
-import RainProbab from './components/RainProbab';
+import Layout from './layout/Layout';
 
 const App = () => {
   return (
     <div className="App">
       <h1>Weather Prediction App</h1>
+      <p>Halo</p>
       <div className="card-container">
-        <RainProbab></RainProbab>
-        <RootRequest />
-        <CityListRequest />
-        <TemperaturePredictionRequest />
+        <Layout></Layout>
       </div>
     </div>
   );

@@ -11,6 +11,8 @@ RUN pip install --no-cache-dir --upgrade poetry
 RUN poetry install --only main
 
 COPY ./src /code/src
+COPY ./utils /code/utils
+COPY ./.env /code/.env
 
 EXPOSE 8000
 

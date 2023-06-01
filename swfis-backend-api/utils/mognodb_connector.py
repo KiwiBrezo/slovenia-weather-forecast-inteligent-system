@@ -8,7 +8,7 @@ load_dotenv()
 database_instance = None
 
 
-def get_database(collection):
+def get_database():
     global database_instance
 
     if database_instance is None:
@@ -18,4 +18,4 @@ def get_database(collection):
 
         print("     -> Connected successfully")
 
-    return database_instance[collection]
+    return database_instance["swfis-predictions"]

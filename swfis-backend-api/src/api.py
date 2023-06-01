@@ -11,6 +11,7 @@ app = FastAPI()
 
 
 class TemperatureData(BaseModel):
+    time: str
     relativehumidity_2m: int
     dewpoint_2m: float
     apparent_temperature: float
@@ -27,6 +28,7 @@ class TemperatureData(BaseModel):
 
 
 class PrecipitationData(BaseModel):
+    time: str
     temperature_2m: float
     relativehumidity_2m: int
     dewpoint_2m: float

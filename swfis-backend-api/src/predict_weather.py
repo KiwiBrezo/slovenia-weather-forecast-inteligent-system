@@ -1,8 +1,12 @@
+from datetime import date
+
 import mlflow
 import numpy as np
 import pandas as pd
 from fastapi.encoders import jsonable_encoder
 from mlflow import MlflowClient
+
+from utils.mognodb_connector import get_database
 
 models_temperature = {
     "Maribor": None,
@@ -51,14 +55,19 @@ def get_precipitation_for_city(city, data):
 
     df = pd.DataFrame(jsonable_encoder(data))
 
-    # x = np.array(df[["temperature", "relativehumidity", "dewpoint", "surface_pressure", "cloudcover", "windspeed",
-    #                 "winddirection", "pm25"]])
+    df_database = pd.DataFrame()
+    df_database["time"] = df["time"]
+    df_database["city"] = city
+
+    df = df.drop("time", axis=1)
 
     print("-> Predicting precipitation for:", city)
     predictions = models_precipitation[city].predict(np.array(df))
 
-    # df["temperature_2m"] = predictions.tolist()
-    # json = df.to_dict(orient='records')
+    df_database["precipitation"] = predictions.tolist()
+    json = df_database.to_dict(orient='records')
+
+    get_database()["precipitation_predictions"].insert_many(json)
 
     return predictions
 
@@ -72,13 +81,18 @@ def get_temperature_for_city(city, data):
 
     df = pd.DataFrame(jsonable_encoder(data))
 
-    #x = np.array(df[["temperature", "relativehumidity", "dewpoint", "surface_pressure", "cloudcover", "windspeed",
-    #                 "winddirection", "pm25"]])
+    df_database = pd.DataFrame()
+    df_database["time"] = df["time"]
+    df_database["city"] = city
+
+    df = df.drop("time", axis=1)
 
     print("-> Predicting temperature for:", city)
     predictions = models_temperature[city].predict(np.array(df))
 
-    #df["temperature_2m"] = predictions.tolist()
-    #json = df.to_dict(orient='records')
+    df_database["temperature_2m"] = predictions.tolist()
+    json = df_database.to_dict(orient='records')
+
+    get_database()["temperature_predictions"].insert_many(json)
 
     return predictions

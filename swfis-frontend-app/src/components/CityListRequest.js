@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const CityListRequest = () => {
   const [response, setResponse] = useState(null);
@@ -6,7 +6,7 @@ const CityListRequest = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('http://localhost:8000/');
+        const res = await fetch("http://localhost:8000/");
         const data = await res.json();
         setResponse(data);
       } catch (error) {

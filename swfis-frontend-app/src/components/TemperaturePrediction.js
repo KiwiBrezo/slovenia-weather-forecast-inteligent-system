@@ -142,7 +142,7 @@ const TemperaturePrediction = () => {
         winddirection_10m: item.winddirection_10m[0],
       }));
 
-      const apiUrlPost = `http://localhost:8000/api/predict/temperature/${selectedCity}`;
+      const apiUrlPost = `${process.env.REACT_APP_TEMPERATURE_API_URL}${selectedCity}`;
       const postResponse = await axios.post(apiUrlPost, payload);
 
       const temperaturePredictions = postResponse.data;

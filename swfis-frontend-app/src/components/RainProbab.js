@@ -58,13 +58,23 @@ const RainProbab = () => {
     setSelectedCity(e.target.value);
   };
 
-  const handleGetPrecipitation = async () => {
+  const handleGetPrecipitation = async (forecastDays) => {
     setIsLoading(true);
 
     try {
       const [latitude, longitude] =
         cityCoordinates[cityNames.indexOf(selectedCity)];
-      const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,weathercode,pressure_msl,surface_pressure,cloudcover,cloudcover_low,cloudcover_mid,cloudcover_high,windspeed_10m,winddirection_10m&forecast_days=1`;
+
+      let apiForecastDays = 1; // Default value for forecast days in API request
+
+      if (forecastDays === 4) {
+        apiForecastDays = 1;
+      } else if (forecastDays === 6) {
+        apiForecastDays = 3;
+      } else if (forecastDays === 12) {
+        apiForecastDays = 7;
+      }
+      const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,weathercode,pressure_msl,surface_pressure,cloudcover,cloudcover_low,cloudcover_mid,cloudcover_high,windspeed_10m,winddirection_10m&forecast_days=${apiForecastDays}`;
       const response = await axios.get(apiUrl);
       const hourlyData = response.data.hourly;
       //---------------------------------------
@@ -115,10 +125,13 @@ const RainProbab = () => {
       // Convert the grouped data into an array
       const formattedData = Object.values(groupedData);
 
-      //console.log("Formatirani podatki", formattedData);
+      console.log(
+        "Formatirani podatki za izbrano časovno obdobje",
+        formattedData
+      );
 
       const dnevniPodatki1dan = formattedData.filter(
-        (_, index) => index % 4 === 0
+        (_, index) => index % forecastDays === 0
       );
       // console.log("Pravi dnevni podatki", dnevniPodatki1dan);
 
@@ -144,7 +157,7 @@ const RainProbab = () => {
 
       //console.log("Payload RaibProbab", payload);
 
-      const apiUrlPost = `http://localhost:8000/api/predict/precipitation/${selectedCity}`;
+      const apiUrlPost = `${process.env.REACT_APP_PRECIPITATION_API_URL}${selectedCity}`;
       const postResponse = await axios.post(apiUrlPost, payload);
       console.log(postResponse);
       const precipitationProbability = postResponse.data;
@@ -225,15 +238,34 @@ const RainProbab = () => {
             </Select>
           </FormControl>
         </Box>
-
-        <Button
-          variant="contained"
-          onClick={handleGetPrecipitation}
-          disabled={!selectedCity}
-          className="padding-top-bottom"
-        >
-          Percipitation Tommorow
-        </Button>
+        <Box sx={{ "& > *": { my: 1, mx: 0.5 } }}>
+          <Button
+            variant="contained"
+            onClick={() => handleGetPrecipitation(4)}
+            disabled={!selectedCity}
+            sx={{ padding: "14px" }}
+          >
+            Percipitation Tomorrow
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => handleGetPrecipitation(6)}
+            disabled={!selectedCity}
+            className="padding-top-bottom"
+            sx={{ padding: "14px" }}
+          >
+            Percipitation 3 Days
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => handleGetPrecipitation(12)}
+            disabled={!selectedCity}
+            className="padding-top-bottom"
+            sx={{ padding: "14px" }}
+          >
+            Percipitation Week
+          </Button>
+        </Box>
       </div>
 
       {isLoading ? (

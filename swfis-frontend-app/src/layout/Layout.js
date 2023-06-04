@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
+import { Link } from "react-router-dom";
 
 // Import your components
 import RainProbab from "../components/RainProbab";
@@ -34,11 +35,12 @@ export default function Layout() {
         <Item>
           <TemperaturePredict />
         </Item>
+        <Item>
+          <Link to="/protected">Go to Protected Page</Link>
+        </Item>
         {/* Add more items/components as needed */}
       </Stack>
       {/* Add more items/components as needed */}
     </Box>
   );
 }
-
-// Jaz hočem naredit eno komponento Tabele ki bo prikazovala predikcije za oboje, Parent komponenta bo meni naredila logiko pa zrihtala vse potem pa v child komponento.

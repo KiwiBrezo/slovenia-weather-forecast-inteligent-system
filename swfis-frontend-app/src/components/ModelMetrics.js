@@ -13,7 +13,7 @@ function ModelMetrics() {
   useEffect(() => {
     // Perform GET API call and update metrics state
     //const apiURL = "http://localhost:8000/api/training/metrics";
-    const apiURL = `${process.env.REACT_APP_PRECIPITATION_API_URL}`;
+    const apiURL = `${process.env.REACT_APP_API_METRICS}`;
     fetch(apiURL)
       .then((response) => response.json())
       .then((data) => setMetrics(data.metrics))

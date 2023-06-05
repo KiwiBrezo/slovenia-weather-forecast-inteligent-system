@@ -12,6 +12,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 
+from utils.mognodb_connector import get_database
+
 file_location = os.path.dirname(__file__)
 
 atributes = "temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,pressure_msl," \
@@ -97,6 +99,15 @@ def train_model(city, y_atribute, x_train, x_test, y_train, y_test):
         print('(', city, ')Mean Absolute Error (MAE):', mae)
         print('(', city, ')Mean Squared Error (MSE):', mse)
         print('(', city, ')Root Mean Squared Error (RMSE):', rmse)
+
+        df_database_metrics = pd.DataFrame()
+        df_database_metrics["city"] = city
+        df_database_metrics["mae"] = mae
+        df_database_metrics["mse"] = mse
+        df_database_metrics["rmse"] = rmse
+        json = df_database_metrics.to_dict(orient='records')
+
+        get_database()["train_metrics"].replace_one({"city": city}, json, upsert=True)
 
         mape = np.mean(np.abs((y_test - predictions) / np.abs(predictions)))
         acc = -1

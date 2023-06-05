@@ -38,6 +38,9 @@ jobs:
         run: |
           cd forecast-model-trainer
 
+          touch .env
+          echo ${{ secrets.TRAINER_ENV_VALUE }} > .env
+
           export MLFLOW_TRACKING_USERNAME=${{ secrets.MLFLOW_TRACKING_USERNAME }}
           export MLFLOW_TRACKING_PASSWORD=${{ secrets.MLFLOW_TRACKING_PASSWORD }}
           

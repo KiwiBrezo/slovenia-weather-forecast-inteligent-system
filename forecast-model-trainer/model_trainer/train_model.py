@@ -12,7 +12,12 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 
-from utils.mognodb_connector import get_database
+from dotenv import load_dotenv
+from pymongo import MongoClient
+
+load_dotenv()
+
+database_instance = None
 
 file_location = os.path.dirname(__file__)
 
@@ -190,6 +195,19 @@ def compare_latest_model_with_production(city, y_atribute):
         )
 
     print("     -> Done checking results")
+
+
+def get_database():
+    global database_instance
+
+    if database_instance is None:
+        print("--- There is no instance of the database connector... try to connect to the database ---")
+        connection_string = os.getenv("MONGODB_URL")
+        database_instance = MongoClient(connection_string)
+
+        print("     -> Connected successfully")
+
+    return database_instance["swfis-predictions"]
 
 
 def main():

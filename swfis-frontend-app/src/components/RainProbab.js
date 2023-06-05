@@ -21,6 +21,8 @@ import PercipitationIcon from "../icons/headerDez.svg";
 import SunIcon from "../icons/Sun.svg";
 import SunRainIcon from "../icons/SunRain.svg";
 import Droplet from "../icons/Kaplja.svg";
+import MildRain from "../icons/MildRain.svg";
+import HeavyRain from "../icons/HeavyRainIcon.svg";
 
 function createData(time, prediction, icon) {
   return { time, prediction, icon };
@@ -158,6 +160,7 @@ const RainProbab = () => {
       //console.log("Payload RaibProbab", payload);
 
       const apiUrlPost = `${process.env.REACT_APP_PRECIPITATION_API_URL}${selectedCity}`;
+      //const apiUrlPost = `http://localhost:8000/api/predict/precipitation/${selectedCity}`;
       const postResponse = await axios.post(apiUrlPost, payload);
       console.log(postResponse);
       const precipitationProbability = postResponse.data;
@@ -181,7 +184,7 @@ const RainProbab = () => {
           height="100"
           viewBox="0 0 24 24"
         />
-      ); // Replace with the appropriate icon for low probability
+      );
     } else if (probability <= 50) {
       return (
         <img
@@ -191,11 +194,27 @@ const RainProbab = () => {
           height="100"
           viewBox="0 0 24 24"
         />
-      ); // Replace with the appropriate icon for moderate probability
+      );
     } else if (probability <= 75) {
-      return "High"; // Replace with the appropriate icon for high probability
+      return (
+        <img
+          src={MildRain} //SunRain icon
+          alt="High"
+          width="100"
+          height="100"
+          viewBox="0 0 24 24"
+        />
+      );
     } else {
-      return "Very High"; // Replace with the appropriate icon for very high probability
+      return (
+        <img
+          src={HeavyRain} //SunRain icon
+          alt="Very High"
+          width="100"
+          height="100"
+          viewBox="0 0 24 24"
+        />
+      );
     }
   };
 
@@ -213,7 +232,15 @@ const RainProbab = () => {
           return createData(time, formatProbability(prediction), icon);
         })
       : [];
-
+  //************ Dummy podatki */
+  const rows2 = [
+    createData("09:00 AM", 25, getRainProbabilityStage(25)),
+    createData("10:00 AM", 50, getRainProbabilityStage(50)),
+    createData("11:00 AM", 75, getRainProbabilityStage(75)),
+    createData("12:00 PM", 78, getRainProbabilityStage(78)),
+    createData("01:00 PM", 90, getRainProbabilityStage(90)),
+  ];
+  //************ Dummy podatki */
   console.log(rows);
 
   return (
@@ -238,7 +265,7 @@ const RainProbab = () => {
             </Select>
           </FormControl>
         </Box>
-        <Box sx={{ "& > *": { my: 1, mx: 0.5 } }}>
+        <Box sx={{ "& > *": { my: 1, mx: 2 } }}>
           <Button
             variant="contained"
             onClick={() => handleGetPrecipitation(4)}
@@ -281,7 +308,7 @@ const RainProbab = () => {
           >
             <TableHead>
               <TableRow>
-                <TableCell>
+                <TableCell align="center">
                   <img
                     src={TimeIcon}
                     alt="Time"
@@ -290,7 +317,7 @@ const RainProbab = () => {
                     viewBox="0 0 24 24"
                   />
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <img
                     src={Droplet}
                     alt="Time"
@@ -299,7 +326,7 @@ const RainProbab = () => {
                     viewBox="0 0 24 24"
                   />
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <img
                     src={PercipitationIcon}
                     alt="Temp Prediction"
@@ -313,11 +340,11 @@ const RainProbab = () => {
             <TableBody>
               {rows.map((row) => (
                 <TableRow key={row.time}>
-                  <TableCell component="th" scope="row">
+                  <TableCell align="center" component="th" scope="row">
                     {row.time}
                   </TableCell>
-                  <TableCell>{row.prediction} %</TableCell>
-                  <TableCell>{row.icon}</TableCell>
+                  <TableCell align="center">{row.prediction} %</TableCell>
+                  <TableCell align="center">{row.icon}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

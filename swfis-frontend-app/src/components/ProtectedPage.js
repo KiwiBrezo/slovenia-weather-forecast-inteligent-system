@@ -3,14 +3,22 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import MonitoringLinks from "../components/MonitoringLinks";
+import ModelMetrics from "../components/ModelMetrics";
+import Stack from "@mui/material/Stack";
+import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 function ProtectedPage() {
   const [password, setPassword] = useState("");
@@ -33,9 +41,28 @@ function ProtectedPage() {
     // Render the content of the protected page
     return (
       <div>
-        <h2>Protected Page</h2>
-        <p>This page is password protected.</p>
-        <p>Only authenticated users can access it.</p>
+        <Box
+          sx={{
+            "& > *": { my: 2, mx: 2 },
+            backgroundColor: "primary.light",
+          }}
+        >
+          <Stack
+            spacing={{ xs: 1, sm: 2, md: 4 }}
+            sx={{ padding: "15px", position: "center", spacing: "2px" }}
+            alignItems="center"
+          >
+            <Item>
+              <MonitoringLinks />
+            </Item>
+            <Item>
+              <ModelMetrics />
+            </Item>
+
+            {/* Add more items/components as needed */}
+          </Stack>
+          {/* Add more items/components as needed */}
+        </Box>
       </div>
     );
   } else {

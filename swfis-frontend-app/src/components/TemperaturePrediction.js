@@ -18,6 +18,12 @@ import {
 
 import TimeIcon from "../icons/timeIcon.svg";
 import CelsiusIcon from "../icons/tempCelsius.svg";
+import Snowflake from "../icons/Snowflake.svg";
+import ColdTemp from "../icons/CoolTemp.svg";
+import CoolTemp from "../icons/CoolTemp.svg";
+import MildTemp from "../icons/MildTemp.svg";
+import HotTemp from "../icons/HotTemp.svg";
+import FireTemp from "../icons/flame-icon.svg";
 
 function createData(time, prediction, icon) {
   return { time, prediction, icon };
@@ -142,7 +148,8 @@ const TemperaturePrediction = () => {
         winddirection_10m: item.winddirection_10m[0],
       }));
 
-      const apiUrlPost = `${process.env.REACT_APP_TEMPERATURE_API_URL}${selectedCity}`;
+      const apiUrlPost = `${process.env.REACT_APP_TEMPERATURE_API_URL}`;
+      // const apiUrlPost = `http://localhost:8000/api/predict/temperature/${selectedCity}`;
       const postResponse = await axios.post(apiUrlPost, payload);
 
       const temperaturePredictions = postResponse.data;
@@ -158,17 +165,65 @@ const TemperaturePrediction = () => {
 
   const getTempStage = (probability) => {
     if (probability <= -5) {
-      return "Extremely Cold"; // snežinka
+      return (
+        <img
+          src={Snowflake}
+          alt="Extremely Cold"
+          width="100"
+          height="100"
+          viewBox="0 0 24 24"
+        />
+      ); // snežinka
     } else if (probability <= 5) {
-      return "Cold"; // cold temp ikona
+      return (
+        <img
+          src={ColdTemp}
+          alt="Cold"
+          width="100"
+          height="100"
+          viewBox="0 0 24 24"
+        />
+      ); // cold temp ikona
     } else if (probability <= 15) {
-      return "Cool"; //
+      return (
+        <img
+          src={CoolTemp}
+          alt="Cool"
+          width="100"
+          height="100"
+          viewBox="0 0 24 24"
+        />
+      ); // Scarf
     } else if (probability <= 20) {
-      return "Mild"; //
+      return (
+        <img
+          src={MildTemp}
+          alt="Mild"
+          width="100"
+          height="100"
+          viewBox="0 0 24 24"
+        />
+      ); //
     } else if (probability <= 25) {
-      return "Hot"; // za vroče ikona
+      return (
+        <img
+          src={HotTemp}
+          alt="Hot"
+          width="100"
+          height="100"
+          viewBox="0 0 24 24"
+        />
+      ); // za vroče ikona
     } else if (probability <= 30) {
-      return "Extremely Hot"; // fire icon
+      return (
+        <img
+          src={FireTemp}
+          alt="Extremely Hot"
+          width="100"
+          height="100"
+          viewBox="0 0 24 24"
+        />
+      ); // fire icon
     }
   };
 
@@ -186,6 +241,16 @@ const TemperaturePrediction = () => {
         })
       : [];
 
+  /* Dummy podatki */
+  const rows2 = [
+    createData("2023-05-25 08:00", -8, getTempStage(-8)),
+    createData("2023-05-25 12:00", 2, getTempStage(2)),
+    createData("2023-05-25 16:00", 18, getTempStage(18)),
+    createData("2023-05-25 20:00", 23, getTempStage(23)),
+    createData("2023-05-26 08:00", 28, getTempStage(28)),
+  ];
+
+  /**Dummy podatki */
   return (
     <div className="card padding-between-elements">
       <Box sx={{ minWidth: 120 }}>
@@ -207,15 +272,16 @@ const TemperaturePrediction = () => {
           </Select>
         </FormControl>
       </Box>
-
-      <Button
-        variant="contained"
-        onClick={handleGetTemperature}
-        disabled={!selectedCity || isLoading}
-        className="padding-top-bottom"
-      >
-        Tommorow Temperature
-      </Button>
+      <Box sx={{ "& > *": { my: 1, mx: 2 } }}>
+        <Button
+          variant="contained"
+          onClick={handleGetTemperature}
+          disabled={!selectedCity || isLoading}
+          className="padding-top-bottom"
+        >
+          Tommorow Temperature
+        </Button>
+      </Box>
       {isLoading && <div>Loading...</div>}
       {temperaturePrediction && (
         <TableContainer component={Paper}>
@@ -226,7 +292,7 @@ const TemperaturePrediction = () => {
           >
             <TableHead>
               <TableRow>
-                <TableCell>
+                <TableCell align="center">
                   <img
                     src={TimeIcon}
                     alt="Time"
@@ -235,7 +301,7 @@ const TemperaturePrediction = () => {
                     viewBox="0 0 24 24"
                   />
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <img
                     src={CelsiusIcon}
                     alt="Temp Prediction"
@@ -244,17 +310,17 @@ const TemperaturePrediction = () => {
                     viewBox="0 0 24 24"
                   />
                 </TableCell>
-                <TableCell>Icon</TableCell>
+                <TableCell align="center">Icon</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {rows.map((row) => (
                 <TableRow key={row.time}>
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" align="center">
                     <p> {row.time}</p>
                   </TableCell>
-                  <TableCell>{row.prediction}</TableCell>
-                  <TableCell>{row.icon}</TableCell>
+                  <TableCell align="center">{row.prediction}</TableCell>
+                  <TableCell align="center">{row.icon}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

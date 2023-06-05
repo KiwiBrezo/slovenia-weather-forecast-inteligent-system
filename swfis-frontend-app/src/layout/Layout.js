@@ -36,11 +36,12 @@ export default function Layout() {
           <TemperaturePredict />
         </Item>
         <Item>
-          <Link to="/protected">Go to Protected Page</Link>
+          <Link to="/protected">Monitoring</Link>
         </Item>
-        {/* Add more items/components as needed */}
+
+        {/*  */}
       </Stack>
-      {/* Add more items/components as needed */}
+      {/*  */}
     </Box>
   );
 }

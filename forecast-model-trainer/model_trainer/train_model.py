@@ -105,14 +105,15 @@ def train_model(city, y_atribute, x_train, x_test, y_train, y_test):
         print('(', city, ')Mean Squared Error (MSE):', mse)
         print('(', city, ')Root Mean Squared Error (RMSE):', rmse)
 
-        df_database_metrics = pd.DataFrame()
-        df_database_metrics["city"] = city
-        df_database_metrics["mae"] = mae
-        df_database_metrics["mse"] = mse
-        df_database_metrics["rmse"] = rmse
-        json = df_database_metrics.to_dict(orient='records')
+        json = {
+            "city": city,
+            "attribute": y_atribute,
+            "mae": mae,
+            "mse": mse,
+            "rmse": rmse
+        }
 
-        get_database()["train_metrics"].replace_one({"city": city}, json, upsert=True)
+        get_database()["train_metrics"].replace_one({"city": city, "attribute": y_atribute}, json, upsert=True)
 
         mape = np.mean(np.abs((y_test - predictions) / np.abs(predictions)))
         acc = -1

@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 
 from src.predict_weather import get_precipitation_for_city, get_temperature_for_city
+from utils.mognodb_connector import get_database
 
 app = FastAPI()
 
@@ -78,8 +79,13 @@ def ping_check():
 
 
 @app.get("/city-list")
-def get_city_list():
+async def get_city_list():
     return city_names
+
+
+@app.get("/api/training/metrics")
+async def get_training_metrics():
+    return {"metrics": list(get_database()["train_metrics"].find({}, {'_id': 0}))}
 
 
 @app.post("/api/predict/temperature/{city}")

@@ -13,6 +13,12 @@ RUN npm install --force
 # Copy the rest of the app's source code
 COPY . .
 
+# Remove local dev env
+RUN rm .env
+
+# Rename env for docker
+RUN mv .env.docker .env
+
 # Build the app
 RUN npm run build
 

@@ -1,0 +1,40 @@
+version: '3.1'
+services:
+
+  swfis-api:
+    image: swfis-api
+    build:
+      context: ./swfis-backend-api/
+      dockerfile: Dockerfile
+    container_name: swfis-api
+    hostname: swfis-api
+    ports:
+      - 8000:8000
+    networks:
+      swfis-network:
+        ipv4_address: 192.168.2.10
+    restart: always
+
+  swfis-frontend:
+    image: swfis-frontend
+    build:
+      context: ./swfis-frontend-app/
+      dockerfile: Dockerfile
+    container_name: swfis-frontend
+    hostname: swfis-frontend
+    ports:
+      - 3000:3000
+    networks:
+      swfis-network:
+        ipv4_address: 192.168.2.11
+    depends_on:
+      - swfis-api
+    restart: always
+
+networks:
+  swfis-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.2.0/24

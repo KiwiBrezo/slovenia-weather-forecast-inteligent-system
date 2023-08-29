@@ -1,4 +1,8 @@
+# Project data
 **/.idea
 **/.pytest_cache
 **/.python-version
 **/poetry.lock
+
+# Reports should not be uploaded to git
+forecast-model-trainer/reports/
